@@ -6,8 +6,10 @@ import TextField from "@mui/material/TextField";
 import Snackbar from "@mui/material/Snackbar";
 import MuiAlert from "@mui/material/Alert";
 import { useDispatch } from "react-redux";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { changePassword } from "./LoginSlice.js";
+import shoppingLogo from "../assets/shoppingLogo.jpg";
+import Chip from "@mui/material/Chip";
 
 const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
@@ -23,9 +25,10 @@ const style = {
   border: "2px solid #000",
   boxShadow: 24,
   p: 4,
+  textAlign: "center",
 };
 
-const Profile = () => {
+const Profile = ({ handleCartOpen, handleCartClose, cartComponent }) => {
   const [modalOpen, setModelOpen] = useState(false);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
@@ -35,6 +38,7 @@ const Profile = () => {
   const [verifyPassword, setVerifyPassword] = useState("");
   const location = useLocation();
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const currentPassword = location.state.password;
 
   const handleClick = () => {
@@ -55,15 +59,35 @@ const Profile = () => {
     setSnackbarOpen(true);
     setModelOpen(false);
   };
+
   return (
     <Grid
       container
-      sx={{ marginTop: "30px", textAlign: "center", border: "1px solid black" }}
+      sx={{
+        marginTop: "30px",
+        textAlign: "center",
+      }}
     >
       <Grid item xs={9}>
-        <Typography>E_Commerce Catalog section</Typography>
+        <Typography
+          sx={{
+            fontSize: "30px",
+            fontWeight: "600",
+            color: "darkblue",
+          }}
+        >
+          E-Commerce Catalog{" "}
+        </Typography>
       </Grid>
-      <Grid item xs={3}>
+      <Grid item xs={0.5}>
+        <Button
+          variant="contained"
+          onClick={cartComponent ? handleCartClose : handleCartOpen}
+        >
+          {cartComponent ? "Catalog" : "Cart"}
+        </Button>
+      </Grid>
+      <Grid item xs={2.5}>
         <Button variant="contained" onClick={() => setModelOpen(true)}>
           Change Password
         </Button>
@@ -83,6 +107,7 @@ const Profile = () => {
             type="password"
           />
           <br />
+          <br />
           <TextField
             id="new-Password"
             label="New Password"
@@ -91,6 +116,7 @@ const Profile = () => {
             type="password"
           />
           <br />
+          <br />
           <TextField
             id="verify-Password"
             label="Verify Password"
@@ -98,6 +124,7 @@ const Profile = () => {
             onChange={(e) => setVerifyPassword(e.target.value)}
             type="password"
           />
+          <br />
           <br />
           <Button variant="contained" onClick={handleClick}>
             Change Password
